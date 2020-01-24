@@ -10,7 +10,8 @@ command
 
     tag remove
     
-But it was fun and I also wanted better understanding of
+But writing this util was easy and fun.
+Also I wanted to get better understanding of the
 Joplin files structure.
 
 As a bonus here we have Python code that can be
