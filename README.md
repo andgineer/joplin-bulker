@@ -5,10 +5,16 @@ there are no tools for tags bulk removing.
 
 So I write this small util.
 
-In fact I am pretty sure there is something in command line Joplin tools but
-it was fun just to beter understand Joplin files structure.
+Of cause you can use [Joplin command line](https://joplinapp.org/terminal/) 
+command 
 
-And now we have code that we can adjust for our purposes.
+    tag remove
+    
+But it was fun and I also wanted better understanding of
+Joplin files structure.
+
+As a bonus here we have Python code that can be
+adjusted by anybody who prefer Python.
 
 For example it would be easy to filter by note title or to find all
 dangling tags and so on.
