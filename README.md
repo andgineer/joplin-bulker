@@ -1,4 +1,4 @@
-![CI status]https://github.com/andgineer/joplin-bulker/workflows/.github/workflows/pyhonapp.yml/badge.svg)
+[![CI status](https://github.com/andgineer/joplin-bulker/workflows/Python%20application/badge.svg)](https://github.com/andgineer/joplin-bulker/actions)
 # Joplin bulk tags remover
 
 Python script to bulk remove tags from [Joplin](https://joplinapp.org) files.
