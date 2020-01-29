@@ -2,6 +2,7 @@ import argparse
 import yaml
 import os.path
 import os
+from typing import TextIO
 
 
 CONFIG_FILE_NAME = 'config.yaml'
@@ -40,9 +41,22 @@ def joplin_file_name(joplin_dir: str) -> str:
                 yield file_full_name
 
 
-def parse_joplin(file_name: str) -> dict:
+def parse_joplin(joplin_file: TextIO, file_name: str) -> dict:
     """
-    Extracts all headers from the Joplin file
+    Extracts all headers from a Joplin file
+
+    Returns dict (<id> - the file ID)
+        {
+            <id>: {
+                'id': <id>,
+                'tags': <array of tag IDs>,
+                'note_id': <note_id>,
+                'type': <type>, # see class Types
+                'title': <title>,
+                'text': <text>,
+                'file_name': <file_name>,
+            }
+        }
     """
     headers = {
         'tag_id:': {
@@ -65,30 +79,29 @@ def parse_joplin(file_name: str) -> dict:
     title = None
 
     text_stop = False
-    with open(file_name, 'r', encoding='utf8', errors='ignore') as f:
-        for line in f:
-            for header_name, header in headers.items():
-                if line.startswith(header_name):
-                    text_stop = True  # headers section. the file text was above so we stop collecting it.
-                    header_value = line[len(header_name):].strip()
+    for line in joplin_file:
+        for header_name, header in headers.items():
+            if line.startswith(header_name):
+                text_stop = True  # headers section. the file text was above so we stop collecting it.
+                header_value = line[len(header_name):].strip()
 
-                    if 'isArray' in header:
-                        if header['target_name'] not in file_headers:
-                            file_headers[header['target_name']] = []
-                        file_headers[header['target_name']].append(header_value)
-                    else:
-                        file_headers[header['target_name']] = header_value
-                    break
-            else:
-                if not text_stop:
-                    if not title:
-                        title = line
-                    text.append(line)
+                if 'isArray' in header:
+                    if header['target_name'] not in file_headers:
+                        file_headers[header['target_name']] = []
+                    file_headers[header['target_name']].append(header_value)
+                else:
+                    file_headers[header['target_name']] = header_value
+                break
+        else:
+            if not text_stop:
+                if not title:
+                    title = line
+                text.append(line)
 
     file_headers.update({
+        'file_name': file_name,
         'title': title,
         'text': '\n'.join(text),
-        'file_name': file_name
     })
     if 'id' not in file_headers:
         print(f'Unknown file id for {file_name}')
@@ -130,7 +143,9 @@ def main():
     config = load_config()
 
     for file_name in joplin_file_name(os.path.abspath(config['folder'])):
-        notes.update(parse_joplin(file_name))
+        with open(file_name, 'r', encoding='utf8', errors='ignore') as joplin_file:
+            joplin_obj = parse_joplin(joplin_file, file_name)
+            notes.update(joplin_obj)
 
     # fill note dict for fast tag ID search by tag name
     # add tags ids to notes 'tags' header
