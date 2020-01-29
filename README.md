@@ -24,7 +24,7 @@ Specify `folder` with you Joplin files in `config.yaml`.
     
 ### Usage
 
-        python3 tag.py --rm=<tag name to remove> 
+        python3 src/tag.py --rm=<tag name to remove> 
     
 ### History
 
