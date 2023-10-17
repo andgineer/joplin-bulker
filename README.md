@@ -1,4 +1,5 @@
 [![CI status](https://github.com/andgineer/joplin-bulker/workflows/CI/badge.svg)](https://github.com/andgineer/joplin-bulker/actions)
+[![Coverage](https://raw.githubusercontent.com/andgineer/joplin-bulker/python-coverage-comment-action-data/badge.svg)](https://htmlpreview.github.io/?https://github.com/andgineer/joplin-bulker/blob/python-coverage-comment-action-data/htmlcov/index.html)
 # Joplin assorted automation
 
 ## Functions
