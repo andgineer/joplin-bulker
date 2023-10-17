@@ -17,7 +17,7 @@ So better to have the local Joplin files in some kind of auto-sync folder (Dropb
 In this case all changes in the folder will auto-propagate to all your devices 
 with Joplin installed.
 
-        python src/tag.py --rm=<tag name to remove> 
+        python src/joplin_bulker/tag.py --rm=<tag name to remove> 
 
 ## Usage
 

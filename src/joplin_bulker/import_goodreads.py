@@ -41,6 +41,9 @@ def create_notes() -> None:
 def goodreads_url(id: str) -> str:
     return f"https://www.goodreads.com/book/show/{id}"
 
+def main():
+    print(import_good_reads("~/Downloads/goodreads_library_export.csv"))
+
 
 if __name__ == "__main__":
-    print(import_good_reads("~/Downloads/goodreads_library_export.csv"))
+    main()

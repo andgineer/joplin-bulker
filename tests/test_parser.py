@@ -1,4 +1,4 @@
-from tag import parse_joplin
+from joplin_bulker.tag import parse_joplin
 from io import StringIO
 
 
