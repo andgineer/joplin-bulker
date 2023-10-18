@@ -1,3 +1,8 @@
+import json
+import pathlib
+from pathlib import Path
+from typing import List, Optional
+
 import pytest
 
 
@@ -36,3 +41,60 @@ type_: 1""",
 @pytest.fixture(scope='function', params=JOPLIN_NOTES)
 def joplin_note(request):
     return request.param
+
+
+def _get_repo_root_dir() -> str:
+    """
+    :return: path to the project folder.
+    `tests/` should be in the same folder and this file should be in the root of `tests/`.
+    """
+    return str(Path(__file__).parent.parent)
+
+
+ROOT_DIR = _get_repo_root_dir()
+RESOURCES = pathlib.Path(f"{ROOT_DIR}/tests/resources")
+
+
+def paths_content_is_same(path1: Path, path2: Path) -> bool:
+    if path1.is_file():
+        assert (
+            path1.open("r", encoding="utf8").read()
+            == path2.open("r", encoding="utf8").read()  # with assert we leverage pytest diff
+        ), f"{path1.parent.name}/{path1.name}"
+        return True
+
+    subpath_rel_1 = [f"{folder.name}" for folder in path1.glob("*")]
+    subpath_rel_2 = [f"{folder.name}" for folder in path2.glob("*")]
+    assert subpath_rel_1 == subpath_rel_2, set(subpath_rel_1).difference(set(subpath_rel_2))
+
+    for subpath in path1.glob("*"):
+        paths_content_is_same(subpath, (path2 / subpath.name))  # do not need result
+    return True
+
+
+class JoplinRawTestCase:
+    diff: Optional[List[str]] = None
+
+    def __init__(self, folder: str):
+        self.expected_folder = RESOURCES / folder / "expected"
+        self.source_folder = RESOURCES / folder / "source"
+
+    def check(self, folder: str, expected_folder: str = None) -> bool:
+        if expected_folder is None:
+            expected_folder = self.expected_folder
+        return paths_content_is_same(Path(expected_folder), Path(folder))
+
+    def copy_existed(self, folder: Path, source: Optional[Path] = None) -> None:
+        if source is None:
+            source = self.source_folder
+        for subpath in source.glob("*"):
+            if subpath.is_file():
+                (folder / subpath.name).write_bytes(subpath.read_bytes())
+            else:
+                (folder / subpath.name).mkdir()
+                self.copy_existed(folder / subpath.name, subpath)
+
+
+@pytest.fixture(scope="function", params=["tag_school"])
+def test_case(request) -> JoplinRawTestCase:
+    return JoplinRawTestCase(request.param)

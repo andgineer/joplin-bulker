@@ -130,6 +130,7 @@ def remove_tag(remove_tag_name: str):
 
     print(f'Removing tag file: {notes[remove_tag_id]["file_name"]} ...')
     os.remove(notes[remove_tag_id]['file_name'])
+    del tags[remove_tag_name]
 
     return relations_removed
 
@@ -165,7 +166,7 @@ def main(remove_tag_name=None):
 
     if remove_tag_name:
         print(f'Removing tag {remove_tag_name} ...')
-        remove_tag(remove_tag_name, tags, notes)
+        remove_tag(remove_tag_name)
     else:
         print('Tags:')
         for tag in tags:
