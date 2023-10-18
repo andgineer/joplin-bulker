@@ -1,7 +1,7 @@
 import requests
 import requests.exceptions
 import pandas as pd
-from joppy.api import Api, JoplinItem
+from joppy.api import Api, Note
 
 
 GOODREADS_COLUMN_NAMES = ['Book Id', 'Title', 'Author', 'ISBN', 'My Rating', 'Date Added',
@@ -32,7 +32,7 @@ def import_good_reads(file_name: str) -> pd.DataFrame:
 def create_notes() -> None:
     token = get_token()
     api = Api(token=token)
-    item = JoplinItem(
+    item = Note(
 
     )
     api.add_note(item)

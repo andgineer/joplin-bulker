@@ -39,7 +39,7 @@ setuptools.setup(
     description=("Assorted Joplin automation."),
     entry_points={
         "console_scripts": [
-            "joplin-bulker=joplin_bulker.import_goodreads.py:main",
+            "joplin-bulker=joplin_bulker.main:cli",
         ],
     },
     long_description=long_description,

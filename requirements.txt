@@ -8,15 +8,31 @@ certifi==2023.7.22
     # via requests
 charset-normalizer==3.3.0
     # via requests
+click==8.1.7
+    # via -r requirements.in
 idna==3.4
     # via requests
 joppy==0.2.1
     # via -r requirements.in
+numpy==1.26.1
+    # via pandas
+pandas==2.1.1
+    # via -r requirements.in
+python-dateutil==2.8.2
+    # via pandas
+pytz==2023.3.post1
+    # via pandas
 pyyaml==6.0.1
     # via -r requirements.in
 requests==2.31.0
     # via
     #   -r requirements.in
     #   joppy
-urllib3==2.0.6
+six==1.16.0
+    # via python-dateutil
+tqdm==4.66.1
+    # via -r requirements.in
+tzdata==2023.3
+    # via pandas
+urllib3==2.0.7
     # via requests

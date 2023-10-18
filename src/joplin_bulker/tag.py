@@ -1,8 +1,12 @@
-import argparse
+""" Joplin old files format parser.
+
+Now this is only for "Export RAW".
+"""
 import yaml
 import os.path
 import os
 from typing import TextIO
+from tqdm import tqdm
 
 
 CONFIG_FILE_NAME = 'config.yaml'
@@ -16,14 +20,6 @@ class Types:
 
 notes = {}
 tags = {}
-
-
-def parse_args():
-    parser = argparse.ArgumentParser(description='Joplin tags operations')
-    parser.add_argument('--rm',
-                        help='delete the tag')
-
-    return parser.parse_args()
 
 
 def load_config() -> dict:
@@ -138,11 +134,12 @@ def remove_tag(remove_tag_name: str):
     return relations_removed
 
 
-def main():
-    args = parse_args()
+def main(remove_tag_name=None):
     config = load_config()
+    progress = tqdm(desc='Parsing Joplin files', unit=' files', total=0, leave=False)
 
     for file_name in joplin_file_name(os.path.abspath(config['folder'])):
+        progress.update()
         with open(file_name, 'r', encoding='utf8', errors='ignore') as joplin_file:
             joplin_obj = parse_joplin(joplin_file, file_name)
             notes.update(joplin_obj)
@@ -161,17 +158,15 @@ def main():
                         else:
                             print('!' * 50, f'no tag file for relation {note["id"]}')
                     else:
-                        print('!'*50, f'no tag file for relation {note["id"]}')
+                        print('!' * 50, f'no tag file for relation {note["id"]}')
             else:
                 print(f'No tag_id in relation {note["id"]}')
+    print()
 
-    if hasattr(args, 'rm') and args.rm:
-        remove_tag(args.rm)
+    if remove_tag_name:
+        print(f'Removing tag {remove_tag_name} ...')
+        remove_tag(remove_tag_name, tags, notes)
     else:
-        # list tags
+        print('Tags:')
         for tag in tags:
             print(tag, tags[tag])
-
-
-if __name__ == '__main__':
-    main()
