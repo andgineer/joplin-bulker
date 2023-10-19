@@ -2,5 +2,6 @@ pyyaml>=5.1
 joppy
 requests
 click
+rich-click
 pandas
 tqdm
