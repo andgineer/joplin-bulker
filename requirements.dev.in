@@ -1,3 +1,4 @@
 # test
 pytest
 pytest-cov
+rich-click

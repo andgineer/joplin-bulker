@@ -1,4 +1,4 @@
-import click
+import rich_click as click
 from joplin_bulker.tag import main
 from joplin_bulker.import_goodreads import import_good_reads
 
