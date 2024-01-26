@@ -6,5 +6,6 @@ pytest-cov
 pip-tools
 
 # lint
+pre-commit
 mypy
 pylint
