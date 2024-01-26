@@ -3,6 +3,7 @@ exclude: |
         tests/|
         setup.py|
         version.py|
+        conftest.py|
         site/|
         docker/|
         docs/
