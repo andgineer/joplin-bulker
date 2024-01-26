@@ -1,3 +1,10 @@
 # test
 pytest
 pytest-cov
+
+# build
+pip-tools
+
+# lint
+mypy
+pylint

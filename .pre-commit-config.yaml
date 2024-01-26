@@ -43,7 +43,7 @@ repos:
           ]
 
   - repo: https://github.com/psf/black
-    rev: 23.10.0
+    rev: 24.1.0
     hooks:
       - id: black
         name: Fixes formatting
@@ -51,7 +51,7 @@ repos:
         args: ["--line-length=99"]
 
   - repo: https://github.com/PyCQA/flake8
-    rev: 6.1.0
+    rev: 7.0.0
     hooks:
       - id: flake8
         name: Checks pep8 style
@@ -67,23 +67,35 @@ repos:
           # ignore module level import not at top of file (E402) to skip tests with uninstalled modules (pytest.importorskip)
           - --ignore=E501,E203,W503,E402
 
-  - repo: https://github.com/pre-commit/mirrors-mypy
-    rev: v1.6.1
+  - repo: https://github.com/PyCQA/pydocstyle
+    rev: 6.3.0
     hooks:
-    -   id: mypy
-        args: ["--install-types", "--non-interactive", "--strict", "--implicit-reexport", "--warn-unused-ignores", "--cache-fine-grained", "--no-namespace-packages"]
-
-  - repo: local
-    hooks:
-      - id: pylint
-        name: Pylint
-        entry: pylint --max-line-length=99 --ignore-imports=yes
-        files: \.py$
-        language: python
-
       - id: pydocstyle
         name: docstrings
         entry: pydocstyle
         language: python
         args:
           - --ignore=D100,D203,D405,D407,D213,D413
+
+  - repo: local
+    hooks:
+      - id: mypy
+        name: MyPy
+        entry: |
+          mypy
+          --ignore-missing-imports
+          --install-types
+          --non-interactive
+          --strict
+          --implicit-reexport
+          --warn-unused-ignores
+          --cache-fine-grained
+          --no-namespace-packages
+        files: \.py$
+        language: python
+
+      - id: pylint
+        name: Pylint
+        entry: pylint --max-line-length=99 --ignore-imports=yes
+        files: \.py$
+        language: python

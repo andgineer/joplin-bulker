@@ -1,10 +1,11 @@
-""" Joplin old files format parser.
+"""Joplin old files format parser.
 
 Now this is only for "Export RAW".
 """
+
 import os
 import os.path
-from typing import TextIO, Dict, Any, Optional
+from typing import Any, Dict, Iterator, Optional, TextIO
 
 import yaml
 from tqdm import tqdm
@@ -13,23 +14,24 @@ CONFIG_FILE_NAME = "config.yaml"
 
 
 class Types:
+    """Types of Joplin files."""
+
     TAG_RELATION = "6"
     NOTE = "1"
     TAG = "5"
 
 
-notes = {}
-tags = {}
+notes: Dict[str, Any] = {}
+tags: Dict[str, Any] = {}
 
 
 def load_config() -> Dict[str, Any]:
-    return yaml.full_load(open(CONFIG_FILE_NAME, "rb"))
+    """Load config file."""
+    return yaml.full_load(open(CONFIG_FILE_NAME, "rb"))  # type: ignore
 
 
-def joplin_file_name(joplin_dir: str) -> str:
-    """
-    Generator that iterates all joplin files
-    """
+def joplin_file_name(joplin_dir: str) -> Iterator[str]:
+    """Generate that iterates all joplin files."""
     for _, _, files in os.walk(joplin_dir):
         for filename in files:
             file_full_name = os.path.join(joplin_dir, filename)
@@ -38,8 +40,7 @@ def joplin_file_name(joplin_dir: str) -> str:
 
 
 def parse_joplin(joplin_file: TextIO, file_name: str) -> Dict[str, Any]:
-    """
-    Extracts all headers from a Joplin file
+    """Extract all headers from a Joplin file.
 
     Returns dict (<id> - the file ID)
         {
@@ -54,7 +55,7 @@ def parse_joplin(joplin_file: TextIO, file_name: str) -> Dict[str, Any]:
             }
         }
     """
-    headers = {
+    headers: Dict[str, Dict[str, Any]] = {
         "tag_id:": {"target_name": "tags", "isArray": True},
         "id:": {
             "target_name": "id",
@@ -67,7 +68,7 @@ def parse_joplin(joplin_file: TextIO, file_name: str) -> Dict[str, Any]:
         },
     }
 
-    file_headers = {
+    file_headers: Dict[str, Any] = {
         value["target_name"]: [] for name, value in headers.items() if "isArray" in value
     }
     text = []
@@ -114,6 +115,7 @@ def parse_joplin(joplin_file: TextIO, file_name: str) -> Dict[str, Any]:
 
 
 def remove_tag(remove_tag_name: str) -> int:
+    """Remove tag from Joplin files."""
     if remove_tag_name not in tags:
         print(f"Tag {remove_tag_name} was not found")
         return 0
@@ -139,6 +141,7 @@ def remove_tag(remove_tag_name: str) -> int:
 
 
 def main(remove_tag_name: Optional[str] = None) -> None:
+    """Delete tag."""
     config = load_config()
     progress = tqdm(desc="Parsing Joplin files", unit=" files", total=0, leave=False)
 
@@ -151,20 +154,24 @@ def main(remove_tag_name: Optional[str] = None) -> None:
     # fill note dict for fast tag ID search by tag name
     # add tags ids to notes 'tags' header
     for note in notes.values():
-        if note["type"] == Types.TAG_RELATION:
-            if "tags" in note:
-                note_id = note["note_id"]
-                for tag_id in note["tags"]:
-                    if tag_id in notes:
-                        tags.update({notes[tag_id]["text"].strip(): notes[tag_id]["id"]})
-                        if note_id in notes:
-                            notes[note_id]["tags"].append(tag_id)
-                        else:
-                            print("!" * 50, f'no tag file for relation {note["id"]}')
-                    else:
-                        print("!" * 50, f'no tag file for relation {note["id"]}')
+        if note["type"] != Types.TAG_RELATION:
+            continue
+
+        if "tags" not in note:
+            print(f'No tag_id in relation {note["id"]}')
+            continue
+
+        note_id = note["note_id"]
+        for tag_id in note["tags"]:
+            if tag_id not in notes:
+                print("!" * 50, f'no tag file for relation {note["id"]}')
+                continue
+
+            tags.update({notes[tag_id]["text"].strip(): notes[tag_id]["id"]})
+            if note_id in notes:
+                notes[note_id]["tags"].append(tag_id)
             else:
-                print(f'No tag_id in relation {note["id"]}')
+                print("!" * 50, f'no tag file for relation {note["id"]}')
     print()
 
     if remove_tag_name:
@@ -172,5 +179,5 @@ def main(remove_tag_name: Optional[str] = None) -> None:
         remove_tag(remove_tag_name)
     else:
         print("Tags:")
-        for tag in tags:
-            print(tag, tags[tag])
+        for tag, val in tags.items():
+            print(tag, val)
