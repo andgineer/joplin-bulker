@@ -32,13 +32,13 @@ pytz==2024.1
     # via pandas
 pyyaml==6.0.1
     # via -r requirements.in
-requests==2.31.0
+requests==2.32.2
     # via
     #   -r requirements.in
     #   joppy
 rich==13.7.1
     # via rich-click
-rich-click==1.8.0
+rich-click==1.8.2
     # via -r requirements.in
 six==1.16.0
     # via python-dateutil
