@@ -3,7 +3,7 @@ import sys
 import pandas as pd
 import requests
 import requests.exceptions
-from joppy.api import Api
+from joppy.api import Api  # pylint: disable=no-name-in-module
 
 TIMEOUT = 10
 GOODREADS_COLUMN_NAMES = [

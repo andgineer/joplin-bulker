@@ -1,3 +1,5 @@
+-r requirements.in
+
 # test
 pytest
 pytest-cov

@@ -48,7 +48,7 @@ setuptools.setup(
     package_dir={"": "src"},
     packages=setuptools.find_packages(where="src"),
     install_requires=requirements,
-    extras_require={'test': tests_requirements},
+    extras_require={"test": tests_requirements},
     python_requires=">=3.9",
     keywords="Joplin",
     classifiers=[

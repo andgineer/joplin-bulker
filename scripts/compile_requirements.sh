@@ -3,8 +3,5 @@
 # Pin current dependencies versions.
 #
 
-rm -f requirements.txt
-rm -f requirements.dev.txt
-
-pip-compile requirements.dev.in --upgrade
-pip-compile requirements.in --upgrade
+uv pip compile requirements.in --output-file=requirements.txt --upgrade
+uv pip compile requirements.dev.in --output-file=requirements.dev.txt --upgrade
