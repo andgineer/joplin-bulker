@@ -127,13 +127,13 @@ def remove_tag(remove_tag_name: str) -> int:
         if note["type"] == Types.TAG_RELATION:
             for tag_id in note["tags"]:
                 if tag_id == remove_tag_id:
-                    print(f'Removing tag relation file {note["id"]}')
+                    print(f"Removing tag relation file {note['id']}")
                     os.remove(note["file_name"])
                     relations_removed += 1
                     break
     print(f"Removed the tag {remove_tag_name} from {relations_removed} occurrences")
 
-    print(f'Removing tag file: {notes[remove_tag_id]["file_name"]} ...')
+    print(f"Removing tag file: {notes[remove_tag_id]['file_name']} ...")
     os.remove(notes[remove_tag_id]["file_name"])
     del tags[remove_tag_name]
 
@@ -158,20 +158,20 @@ def main(remove_tag_name: Optional[str] = None) -> None:
             continue
 
         if "tags" not in note:
-            print(f'No tag_id in relation {note["id"]}')
+            print(f"No tag_id in relation {note['id']}")
             continue
 
         note_id = note["note_id"]
         for tag_id in note["tags"]:
             if tag_id not in notes:
-                print("!" * 50, f'no tag file for relation {note["id"]}')
+                print("!" * 50, f"no tag file for relation {note['id']}")
                 continue
 
             tags.update({notes[tag_id]["text"].strip(): notes[tag_id]["id"]})
             if note_id in notes:
                 notes[note_id]["tags"].append(tag_id)
             else:
-                print("!" * 50, f'no tag file for relation {note["id"]}')
+                print("!" * 50, f"no tag file for relation {note['id']}")
     print()
 
     if remove_tag_name:
