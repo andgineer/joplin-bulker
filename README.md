@@ -1,10 +1,11 @@
 [![CI status](https://github.com/andgineer/joplin-bulker/workflows/ci/badge.svg)](https://github.com/andgineer/joplin-bulker/actions)
 [![Coverage](https://raw.githubusercontent.com/andgineer/joplin-bulker/python-coverage-comment-action-data/badge.svg)](https://htmlpreview.github.io/?https://github.com/andgineer/joplin-bulker/blob/python-coverage-comment-action-data/htmlcov/index.html)
 # Joplin Bulker - Bulk Operations for Joplin Notes
-(!) Manipulates old Joplin files, now this is only Export RAW.
-Does not support latest versions that use SQLite.
+**Important**: This tool works with Joplin's **RAW Export Directory** format only - individual markdown files with metadata headers exported from Joplin. It does **not** work with Joplin's modern SQLite database format used by current versions.
 
-I happily migrated to Obsidian and do not use Joplin anymore, so this is unlikely to be developed further.
+The RAW export format creates a directory structure where each note, tag, and relationship is stored as a separate file with metadata headers. This tool parses these files to perform bulk operations like tag removal and Goodreads CSV imports.
+
+*Note: The author has migrated to Obsidian and no longer maintains this project.*
 
 ## Installation
 
