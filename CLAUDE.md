@@ -21,29 +21,25 @@ Joplin Bulker is a Python automation tool for legacy Joplin files (Export RAW fo
 
 ### Environment Setup
 ```bash
-. ./activate.sh
+source ./activate.sh
 ```
 This script creates/activates a Python 3.12 virtual environment using Astral's UV and installs all dependencies.
+
+**IMPORTANT**: Always activate the virtual environment before running any commands. Use `source ./activate.sh` before each command.
 
 ### Available Commands
 
 #### Testing
 ```bash
-python -m pytest tests/
+source ./activate.sh && python -m pytest tests/
 ```
 
 #### Linting and Formatting
 ```bash
-ruff check --fix .        # Linting with auto-fix
-ruff format .             # Code formatting
-mypy src/                 # Type checking
-pylint src/               # Additional linting
+source ./activate.sh && pre-commit run --all-files  # Run all linting and formatting checks
 ```
 
-#### Pre-commit (runs ruff, mypy, pylint)
-```bash
-pre-commit run --all-files
-```
+**IMPORTANT**: Always use `pre-commit run --all-files` for code quality checks. Never run ruff, mypy, or pylint directly.
 
 #### Version Management
 ```bash
