@@ -5,7 +5,8 @@ Now this is only for "Export RAW".
 
 import os
 import os.path
-from typing import Any, Dict, Iterator, Optional, TextIO
+from collections.abc import Iterator
+from typing import Any, TextIO
 
 import yaml
 from tqdm import tqdm
@@ -21,11 +22,11 @@ class Types:
     TAG = "5"
 
 
-notes: Dict[str, Any] = {}
-tags: Dict[str, Any] = {}
+notes: dict[str, Any] = {}
+tags: dict[str, Any] = {}
 
 
-def load_config() -> Dict[str, Any]:
+def load_config() -> dict[str, Any]:
     """Load config file."""
     return yaml.full_load(open(CONFIG_FILE_NAME, "rb"))  # type: ignore
 
@@ -39,7 +40,7 @@ def joplin_file_name(joplin_dir: str) -> Iterator[str]:
                 yield file_full_name
 
 
-def parse_joplin(joplin_file: TextIO, file_name: str) -> Dict[str, Any]:
+def parse_joplin(joplin_file: TextIO, file_name: str) -> dict[str, Any]:  # noqa: C901
     """Extract all headers from a Joplin file.
 
     Returns dict (<id> - the file ID)
@@ -55,7 +56,7 @@ def parse_joplin(joplin_file: TextIO, file_name: str) -> Dict[str, Any]:
             }
         }
     """
-    headers: Dict[str, Dict[str, Any]] = {
+    headers: dict[str, dict[str, Any]] = {
         "tag_id:": {"target_name": "tags", "isArray": True},
         "id:": {
             "target_name": "id",
@@ -68,13 +69,13 @@ def parse_joplin(joplin_file: TextIO, file_name: str) -> Dict[str, Any]:
         },
     }
 
-    file_headers: Dict[str, Any] = {
+    file_headers: dict[str, Any] = {
         value["target_name"]: [] for name, value in headers.items() if "isArray" in value
     }
-    text = []
-    title = None
+    text: list[str] = []
+    title: str | None = None
 
-    text_stop = False
+    text_stop: bool = False
     for line in joplin_file:
         for header_name, header in headers.items():
             if line.startswith(header_name):
@@ -101,7 +102,7 @@ def parse_joplin(joplin_file: TextIO, file_name: str) -> Dict[str, Any]:
             "file_name": file_name,
             "title": title,
             "text": "\n".join(text),
-        }
+        },
     )
     if "id" not in file_headers:
         print(f"Unknown file id for {file_name}")
@@ -140,14 +141,14 @@ def remove_tag(remove_tag_name: str) -> int:
     return relations_removed
 
 
-def main(remove_tag_name: Optional[str] = None) -> None:
+def main(remove_tag_name: str | None = None) -> None:
     """Delete tag."""
     config = load_config()
     progress = tqdm(desc="Parsing Joplin files", unit=" files", total=0, leave=False)
 
     for file_name in joplin_file_name(os.path.abspath(config["folder"])):
         progress.update()
-        with open(file_name, "r", encoding="utf8", errors="ignore") as joplin_file:
+        with open(file_name, encoding="utf8", errors="ignore") as joplin_file:
             joplin_obj = parse_joplin(joplin_file, file_name)
             notes.update(joplin_obj)
 
