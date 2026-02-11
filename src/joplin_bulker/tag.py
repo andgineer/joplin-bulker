@@ -104,15 +104,16 @@ def parse_joplin(joplin_file: TextIO, file_name: str) -> dict[str, Any]:  # noqa
             "text": "\n".join(text),
         },
     )
-    if "id" not in file_headers:
-        print(f"Unknown file id for {file_name}")
-        file_headers["id"] = None
     if "type" not in file_headers:
         print(f"Unknown file type for {file_name}")
         file_headers["type"] = None
-    if file_headers["id"] == "cbc8be10ea884d69adcdd587857224d6":
+    note_id = file_headers.get("id")
+    if not isinstance(note_id, str):
+        print(f"Unknown file id for {file_name}")
+        return {}
+    if note_id == "cbc8be10ea884d69adcdd587857224d6":
         print(file_headers["type"] == Types.NOTE)
-    return {file_headers["id"]: file_headers}
+    return {note_id: file_headers}
 
 
 def remove_tag(remove_tag_name: str) -> int:
